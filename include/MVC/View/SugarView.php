@@ -83,15 +83,10 @@ class SugarView
     /**
      * Constructor which will peform the setup.
      */
-    public function __construct(
-        $bean = null,
-        $view_object_map = []
-    ) {}
+    public function __construct($bean = null, $view_object_map = []) {}
 
-    public function init(
-        $bean = null,
-        $view_object_map = []
-    ) {
+    public function init($bean = null, $view_object_map = [])
+    {
         $this->bean = $bean;
         $this->view_object_map = $view_object_map;
         $this->action = $GLOBALS['action'];

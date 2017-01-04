@@ -110,7 +110,7 @@ class LanguageManager
         }
     }
 
-    public function saveCache($module, $lang, $loaded_mod_strings, $additonal_objects = [])
+    public static function saveCache($module, $lang, $loaded_mod_strings, $additonal_objects = [])
     {
         if (empty($lang)) {
             $lang = $GLOBALS['sugar_config']['default_language'];
