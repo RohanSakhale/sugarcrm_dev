@@ -473,7 +473,7 @@ class ACLAction extends SugarBean
      *
      * @return array of fields with id, name, access and category
      */
-    public function toArray()
+    public function toArray($dbOnly = false, $stringOnly = false, $upperKeys = false)
     {
         $array_fields = ['id', 'aclaccess'];
         $arr = [];
