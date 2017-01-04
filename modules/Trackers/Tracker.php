@@ -130,7 +130,7 @@ if (!class_exists('Tracker')) {
             }
         }
 
-        public function logPage()
+        public static function logPage()
         {
             $time_on_last_page = 0;
             //no need to calculate it if it is a redirection page

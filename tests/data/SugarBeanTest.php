@@ -3,31 +3,31 @@
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
  * Free Software Foundation with the addition of the following permission added
  * to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED WORK
  * IN WHICH THE COPYRIGHT IS OWNED BY SUGARCRM, SUGARCRM DISCLAIMS THE WARRANTY
  * OF NON INFRINGEMENT OF THIRD PARTY RIGHTS.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with
  * this program; if not, see http://www.gnu.org/licenses or write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
- * 
+ *
  * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
  * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
- * 
+ *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU Affero General Public License version 3.
- * 
+ *
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "Powered by
  * SugarCRM" logo. If the display of the logo is not reasonably feasible for
@@ -35,8 +35,7 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-require_once('include/SugarObjects/templates/file/File.php');
+require_once 'include/SugarObjects/templates/file/File.php';
 
 class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
 {
@@ -44,7 +43,7 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         $GLOBALS['current_user'] = SugarTestUserUtilities::createAnonymousUser();
-	}
+    }
 
     public function setUp()
     {
@@ -57,22 +56,24 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
         SugarTestHelper::tearDown();
     }
 
-	public static function tearDownAfterClass()
-	{
-	    SugarTestUserUtilities::removeAllCreatedAnonymousUsers();
+    public static function tearDownAfterClass()
+    {
+        SugarTestUserUtilities::removeAllCreatedAnonymousUsers();
         unset($GLOBALS['current_user']);
-	}
+    }
 
-    public function testGetObjectName(){
+    public function testGetObjectName()
+    {
         $bean = new BeanMockTestObjectName();
         $this->assertEquals($bean->getObjectName(), 'my_table', "SugarBean->getObjectName() is not returning the table name when object_name is empty.");
     }
 
-    public function testGetAuditTableName(){
+    public function testGetAuditTableName()
+    {
         $bean = new BeanMockTestObjectName();
         $this->assertEquals($bean->get_audit_table_name(), 'my_table_audit', "SugarBean->get_audit_table_name() is not returning the correct audit table name.");
     }
-    
+
     /**
      * @ticket 47261
      */
@@ -96,14 +97,11 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
     {
         $bean = new BeanMockTestObjectName();
         $bean->db = new MockMysqlDb();
-        $bean->retrieve_by_string_fields(array("test1" => "bad'string", "evil'key" => "data", 'tricky-(select * from config)' => 'test'));
+        $bean->retrieve_by_string_fields(["test1" => "bad'string", "evil'key" => "data", 'tricky-(select * from config)' => 'test']);
         $this->assertNotContains("bad'string", $bean->db->lastQuery);
         $this->assertNotContains("evil'key", $bean->db->lastQuery);
         $this->assertNotContains("select * from config", $bean->db->lastQuery);
     }
-
-
-
 
     /**
      * Test to make sure that when a bean is cloned it removes all loaded relationships so they can be recreated on
@@ -144,63 +142,60 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
         $bean->field_defs = $field_defs;
         $actual = $bean->is_relate_field($field_name);
 
-        if ($is_relate)
-        {
+        if ($is_relate) {
             $this->assertTrue($actual);
-        }
-        else
-        {
+        } else {
             $this->assertFalse($actual);
         }
     }
 
     public static function isRelateFieldProvider()
     {
-        return array(
+        return [
             // test for on a non-existing field
-            array(
-                array(), 'dummy', false,
-            ),
+            [
+                [], 'dummy', false,
+            ],
             // test for non-specified field type
-            array(
-                array(
-                    'my_field' => array(),
-                ), 'my_field', false,
-            ),
+            [
+                [
+                    'my_field' => [],
+                ], 'my_field', false,
+            ],
             // test on a non-relate field type
-            array(
-                array(
-                    'my_field' => array(
+            [
+                [
+                    'my_field' => [
                         'type' => 'varchar',
-                    ),
-                ), 'my_field', false,
-            ),
+                    ],
+                ], 'my_field', false,
+            ],
             // test on a relate field type but link not specified
-            array(
-                array(
-                    'my_field' => array(
+            [
+                [
+                    'my_field' => [
                         'type' => 'relate',
-                    ),
-                ), 'my_field', false,
-            ),
+                    ],
+                ], 'my_field', false,
+            ],
             // test when only link is specified
-            array(
-                array(
-                    'my_field' => array(
+            [
+                [
+                    'my_field' => [
                         'link' => 'my_link',
-                    ),
-                ), 'my_field', false,
-            ),
+                    ],
+                ], 'my_field', false,
+            ],
             // test on a relate field type
-            array(
-                array(
-                    'my_field' => array(
+            [
+                [
+                    'my_field' => [
                         'type' => 'relate',
                         'link' => 'my_link',
-                    ),
-                ), 'my_field', true,
-            ),
-        );
+                    ],
+                ], 'my_field', true,
+            ],
+        ];
     }
 
     /**
@@ -229,20 +224,20 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
         $this->assertEmpty($bean->getFiles(), 'Incorrect result');
 
         $bean->id = 'test';
-        $this->assertEquals(array('test'), $bean->getFiles(), 'Incorrect result');
+        $this->assertEquals(['test'], $bean->getFiles(), 'Incorrect result');
 
         $bean = new SugarBean58955Implements();
         $this->assertEmpty($bean->getFiles(), 'Incorrect result');
 
         $bean->id = 'test';
-        $this->assertEquals(array('test'), $bean->getFiles(), 'Incorrect result');
+        $this->assertEquals(['test'], $bean->getFiles(), 'Incorrect result');
 
         $bean = new SugarBean58955Image();
         $bean->id = 'test';
         $this->assertEmpty($bean->getFiles(), 'Incorrect result');
 
         $bean->image = 'test';
-        $this->assertEquals(array('test'), $bean->getFiles(), 'Incorrect result');
+        $this->assertEquals(['test'], $bean->getFiles(), 'Incorrect result');
     }
 
     /**
@@ -251,12 +246,12 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
      */
     public function getHaveFiles()
     {
-        return array(
-            array('SugarBean58955Extends', true),
-            array('SugarBean58955Implements', true),
-            array('SugarBean58955Image', true),
-            array('SugarBean', false),
-        );
+        return [
+            ['SugarBean58955Extends', true],
+            ['SugarBean58955Implements', true],
+            ['SugarBean58955Image', true],
+            ['SugarBean', false],
+        ];
     }
 
     /**
@@ -267,13 +262,13 @@ class SugarBeanTest extends Sugar_PHPUnit_Framework_TestCase
     public function testGetFilesFields()
     {
         $bean = new SugarBean58955Extends();
-        $this->assertEquals(array('id'), $bean->getFilesFields(), 'Incorrect result');
+        $this->assertEquals(['id'], $bean->getFilesFields(), 'Incorrect result');
 
         $bean = new SugarBean58955Implements();
-        $this->assertEquals(array('id'), $bean->getFilesFields(), 'Incorrect result');
+        $this->assertEquals(['id'], $bean->getFilesFields(), 'Incorrect result');
 
         $bean = new SugarBean58955Image();
-        $this->assertEquals(array('image'), $bean->getFilesFields(), 'Incorrect result');
+        $this->assertEquals(['image'], $bean->getFilesFields(), 'Incorrect result');
     }
 }
 
@@ -290,7 +285,7 @@ class SugarBean58955Extends extends File
 
     public function __construct()
     {
-        $this->field_defs = array();
+        $this->field_defs = [];
     }
 }
 
@@ -307,12 +302,12 @@ class SugarBean58955Implements extends SugarBean
 
     public function __construct()
     {
-        $this->field_defs = array();
+        $this->field_defs = [];
     }
 
     public function bean_implements($interface)
     {
-        if ($interface == 'FILE') {
+        if ('FILE' == $interface) {
             return true;
         }
         return parent::bean_implements($interface);
@@ -332,11 +327,11 @@ class SugarBean58955Image extends SugarBean
 
     public function __construct()
     {
-        $this->field_defs = array(
-            'image' => array(
-                'type' => 'image'
-            )
-        );
+        $this->field_defs = [
+            'image' => [
+                'type' => 'image',
+            ],
+        ];
     }
 }
 
@@ -366,11 +361,12 @@ class MockMysqlDb extends MssqlManager
 
 class BeanMockTestObjectName extends SugarBean
 {
-    var $table_name = "my_table";
+    public $table_name = "my_table";
 
-    function BeanMockTestObjectName() {
-		parent::SugarBean();
-	}
+    public function BeanMockTestObjectName()
+    {
+        parent::__construct();
+    }
 }
 
 class BeanIsRelateFieldMock extends SugarBean

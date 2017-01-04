@@ -787,7 +787,7 @@ class SugarBean
      *
      *  Internal function, do not override.
      */
-    public function createRelationshipMeta($key, $db, $tablename, $dictionary, $module_dir, $iscustom = false)
+    public static function createRelationshipMeta($key, $db, $tablename, $dictionary, $module_dir, $iscustom = false)
     {
         //load the module dictionary if not supplied.
         if (empty($dictionary) && !empty($module_dir)) {

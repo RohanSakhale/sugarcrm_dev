@@ -1,33 +1,36 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if (!defined('sugarEntry') || !sugarEntry) {
+    die('Not A Valid Entry Point');
+}
+
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
  * Free Software Foundation with the addition of the following permission added
  * to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED WORK
  * IN WHICH THE COPYRIGHT IS OWNED BY SUGARCRM, SUGARCRM DISCLAIMS THE WARRANTY
  * OF NON INFRINGEMENT OF THIRD PARTY RIGHTS.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with
  * this program; if not, see http://www.gnu.org/licenses or write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
- * 
+ *
  * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
  * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
- * 
+ *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU Affero General Public License version 3.
- * 
+ *
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "Powered by
  * SugarCRM" logo. If the display of the logo is not reasonably feasible for
@@ -42,8 +45,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  * All Rights Reserved.
  ********************************************************************************/
 
-
-require_once('modules/Import/Forms.php');
+require_once 'modules/Import/Forms.php';
 
 class UsersLastImport extends SugarBean
 {
@@ -63,23 +65,23 @@ class UsersLastImport extends SugarBean
     public $module_dir = 'Import';
     public $table_name = "users_last_import";
     public $object_name = "UsersLastImport";
-    var $disable_custom_fields = true;
-    public $column_fields = array(
+    public $disable_custom_fields = true;
+    public $column_fields = [
         "id",
         "assigned_user_id",
         "bean_type",
         "bean_id",
-        "deleted"
-        );
+        "deleted",
+    ];
     public $new_schema = true;
-    public $additional_column_fields = Array();
+    public $additional_column_fields = [];
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        parent::SugarBean();
+        parent::__construct();
     }
 
     /**
@@ -91,11 +93,10 @@ class UsersLastImport extends SugarBean
     {
         $array_assign = parent::listviewACLHelper();
         $is_owner = false;
-        if ( !ACLController::moduleSupportsACL('Accounts')
-                || ACLController::checkAccess('Accounts', 'view', $is_owner) ) {
+        if (!ACLController::moduleSupportsACL('Accounts')
+            || ACLController::checkAccess('Accounts', 'view', $is_owner)) {
             $array_assign['ACCOUNT'] = 'a';
-        }
-        else {
+        } else {
             $array_assign['ACCOUNT'] = 'span';
         }
         return $array_assign;
@@ -109,7 +110,7 @@ class UsersLastImport extends SugarBean
     public function mark_deleted_by_user_id($user_id)
     {
         $query = "DELETE FROM $this->table_name WHERE assigned_user_id = '$user_id'";
-        $this->db->query($query,true,"Error marking last imported records deleted: ");
+        $this->db->query($query, true, "Error marking last imported records deleted: ");
     }
 
     /**
@@ -125,11 +126,11 @@ class UsersLastImport extends SugarBean
                    AND id = '$id' AND deleted=0";
 
         $result1 = $this->db->query($query1);
-        if ( !$result1 )
+        if (!$result1) {
             return false;
-
-        while ( $row1 = $this->db->fetchByAssoc($result1))
-            $this->_deleteRecord($row1['bean_id'],$row1['bean_type']);
+        }
+        while ($row1 = $this->db->fetchByAssoc($result1));
+        $this->_deleteRecord($row1['bean_id'], $row1['bean_type']);
 
         return true;
     }
@@ -147,11 +148,11 @@ class UsersLastImport extends SugarBean
                    AND import_module = '$module' AND deleted=0";
 
         $result1 = $this->db->query($query1);
-        if ( !$result1 )
+        if (!$result1) {
             return false;
-
-        while ( $row1 = $this->db->fetchByAssoc($result1))
-            $this->_deleteRecord($row1['bean_id'],$row1['bean_type']);
+        }
+        while ($row1 = $this->db->fetchByAssoc($result1));
+        $this->_deleteRecord($row1['bean_id'], $row1['bean_type']);
 
         return true;
     }
@@ -162,13 +163,13 @@ class UsersLastImport extends SugarBean
      * @param $bean_id
      * @param $module
      */
-    protected function _deleteRecord($bean_id,$module)
+    protected function _deleteRecord($bean_id, $module)
     {
         static $focus;
 
         // load bean
-        if ( !( $focus instanceof $module) ) {
-            require_once($GLOBALS['beanFiles'][$module]);
+        if (!($focus instanceof $module)) {
+            require_once $GLOBALS['beanFiles'][$module];
             $focus = new $module;
         }
 
@@ -177,9 +178,11 @@ class UsersLastImport extends SugarBean
         $result = $this->db->query(
             "DELETE FROM {$focus->table_name}
                 WHERE id = '{$bean_id}'"
-            );
-        if (!$result)
+        );
+        if (!$result) {
             return false;
+        }
+
         // Bug 26318: Remove all created e-mail addresses ( from jchi )
         $result2 = $this->db->query(
             "SELECT email_address_id
@@ -190,22 +193,24 @@ class UsersLastImport extends SugarBean
             "DELETE FROM email_addr_bean_rel
                 WHERE email_addr_bean_rel.bean_id='{$bean_id}'
                     AND email_addr_bean_rel.bean_module='{$focus->module_dir}'"
-            );
+        );
 
-        while ( $row2 = $this->db->fetchByAssoc($result2)) {
-            if ( !$this->db->getOne(
-                    "SELECT email_address_id
+        while ($row2 = $this->db->fetchByAssoc($result2)) {
+            if (!$this->db->getOne(
+                "SELECT email_address_id
                         FROM email_addr_bean_rel
-                        WHERE email_address_id = '{$row2['email_address_id']}'") )
+                        WHERE email_address_id = '{$row2['email_address_id']}'")) {
                 $this->db->query(
                     "DELETE FROM email_addresses
                         WHERE id = '{$row2['email_address_id']}'");
+            }
         }
 
-        if ($focus->hasCustomFields())
+        if ($focus->hasCustomFields()) {
             $this->db->query(
                 "DELETE FROM {$focus->table_name}_cstm
                     WHERE id_c = '{$bean_id}'");
+        }
     }
 
     /**
@@ -221,15 +226,14 @@ class UsersLastImport extends SugarBean
                    AND import_module = '$module' AND deleted=0";
 
         $result1 = $GLOBALS['db']->query($query1);
-        if ( !$result1 )
-            return array($module);
+        if (!$result1) {
+            return [$module];
+        }
 
-        $returnarray = array();
-        while ( $row1 = $GLOBALS['db']->fetchByAssoc($result1))
-            $returnarray[] = $row1['bean_type'];
+        $returnarray = [];
+        while ($row1 = $GLOBALS['db']->fetchByAssoc($result1));
+        $returnarray[] = $row1['bean_type'];
 
         return $returnarray;
     }
-
 }
-?>
