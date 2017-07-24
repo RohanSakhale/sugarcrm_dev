@@ -129,8 +129,9 @@ if(isset($_POST['language'])) {
 
 $current_language = isset($_SESSION['language']) ? $_SESSION['language'] : $default_lang;
 
-if(file_exists("install/language/{$current_language}.lang.php")) {
-	require_once("install/language/{$current_language}.lang.php");
+$lang_file = validate_path("install/language/{$current_language}.lang.php");
+if(file_exists($lang_file)) {
+    require_once $lang_file;
 } else {
 	require_once("install/language/{$default_lang}.lang.php");
 }
@@ -610,7 +611,7 @@ $the_file = clean_string($the_file, 'FILE');
 installerHook('pre_installFileRequire', array('the_file' => $the_file));
 
 // change to require to get a good file load error message if the file is not available.
-require('install/' . $the_file);
+require validate_path('install/' . $the_file);
 
 installerHook('post_installFileRequire', array('the_file' => $the_file));
 

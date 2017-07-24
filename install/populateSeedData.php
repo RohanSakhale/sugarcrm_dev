@@ -40,6 +40,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 // load the correct demo data and main application language file depending upon the installer language selected; if
 // it's not found fall back on en_us
+$current_language = validate_path($current_language, true);
 if(file_exists("include/language/{$current_language}.lang.php")){
     require_once("include/language/{$current_language}.lang.php");
 }

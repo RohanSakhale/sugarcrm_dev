@@ -79,12 +79,11 @@ function add_blank_option($options){
  * @params : $key_names - array of keys
  * 			 $array_name- name of the array
  * 			 $value -value of the array
- * 			 $eval - evals the generated string if true, note that the array name must be in the global space!
  * @return : example - string $array_name['a']['b']['c'][.] = 'hello'
  */
-function override_value_to_string_recursive($key_names, $array_name, $value, $eval=false){
-	if ($eval) return eval( "\${$array_name}". override_recursive_helper($key_names, $array_name, $value));
-	else return "\${$array_name}". override_recursive_helper($key_names, $array_name, $value);
+function override_value_to_string_recursive($key_names, $array_name, $value)
+{
+    return "\${$array_name}" . override_recursive_helper($key_names, $array_name, $value);
 }
 
 function override_recursive_helper($key_names, $array_name, $value){

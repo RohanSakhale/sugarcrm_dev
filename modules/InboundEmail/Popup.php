@@ -65,7 +65,7 @@ if(ob_get_level() < 1) {
 }
 
 
-require_once('modules/InboundEmail/language/'.$current_language.'.lang.php');
+require_once validate_path('modules/InboundEmail/language/'.$current_language.'.lang.php');
 global $theme;
 
 $title				= '';

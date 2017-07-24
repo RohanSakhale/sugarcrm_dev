@@ -1,8 +1,50 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
-Code licensed under the BSD License:
-http://developer.yahoo.com/yui/license.html
-version: 3.3.0
-build: 3167
-*/
-YUI.add("event-simulate",function(a){(function(){var k=a.Lang,j=a.Array,f=k.isFunction,d=k.isString,g=k.isBoolean,o=k.isObject,n=k.isNumber,m=a.config.doc,p={click:1,dblclick:1,mouseover:1,mouseout:1,mousedown:1,mouseup:1,mousemove:1},l={keydown:1,keyup:1,keypress:1},c={blur:1,change:1,focus:1,resize:1,scroll:1,select:1},e={scroll:1,resize:1,reset:1,submit:1,change:1,select:1,error:1,abort:1};a.mix(e,p);a.mix(e,l);function i(v,z,u,s,B,r,q,A,x,D,C){if(!v){a.error("simulateKeyEvent(): Invalid target.");}if(d(z)){z=z.toLowerCase();switch(z){case"textevent":z="keypress";break;case"keyup":case"keydown":case"keypress":break;default:a.error("simulateKeyEvent(): Event type '"+z+"' not supported.");}}else{a.error("simulateKeyEvent(): Event type must be a string.");}if(!g(u)){u=true;}if(!g(s)){s=true;}if(!o(B)){B=window;}if(!g(r)){r=false;}if(!g(q)){q=false;}if(!g(A)){A=false;}if(!g(x)){x=false;}if(!n(D)){D=0;}if(!n(C)){C=0;}var y=null;if(f(m.createEvent)){try{y=m.createEvent("KeyEvents");y.initKeyEvent(z,u,s,B,r,q,A,x,D,C);}catch(w){try{y=m.createEvent("Events");}catch(t){y=m.createEvent("UIEvents");}finally{y.initEvent(z,u,s);y.view=B;y.altKey=q;y.ctrlKey=r;y.shiftKey=A;y.metaKey=x;y.keyCode=D;y.charCode=C;}}v.dispatchEvent(y);}else{if(o(m.createEventObject)){y=m.createEventObject();y.bubbles=u;y.cancelable=s;y.view=B;y.ctrlKey=r;y.altKey=q;y.shiftKey=A;y.metaKey=x;y.keyCode=(C>0)?C:D;v.fireEvent("on"+z,y);}else{a.error("simulateKeyEvent(): No event simulation framework present.");}}}function b(A,F,x,u,G,z,w,v,t,r,s,q,E,C,y,B){if(!A){a.error("simulateMouseEvent(): Invalid target.");}if(d(F)){F=F.toLowerCase();if(!p[F]){a.error("simulateMouseEvent(): Event type '"+F+"' not supported.");}}else{a.error("simulateMouseEvent(): Event type must be a string.");}if(!g(x)){x=true;}if(!g(u)){u=(F!="mousemove");}if(!o(G)){G=window;}if(!n(z)){z=1;}if(!n(w)){w=0;}if(!n(v)){v=0;}if(!n(t)){t=0;}if(!n(r)){r=0;}if(!g(s)){s=false;}if(!g(q)){q=false;}if(!g(E)){E=false;}if(!g(C)){C=false;}if(!n(y)){y=0;}B=B||null;var D=null;if(f(m.createEvent)){D=m.createEvent("MouseEvents");if(D.initMouseEvent){D.initMouseEvent(F,x,u,G,z,w,v,t,r,s,q,E,C,y,B);}else{D=m.createEvent("UIEvents");D.initEvent(F,x,u);D.view=G;D.detail=z;D.screenX=w;D.screenY=v;D.clientX=t;D.clientY=r;D.ctrlKey=s;D.altKey=q;D.metaKey=C;D.shiftKey=E;D.button=y;D.relatedTarget=B;}if(B&&!D.relatedTarget){if(F=="mouseout"){D.toElement=B;}else{if(F=="mouseover"){D.fromElement=B;}}}A.dispatchEvent(D);}else{if(o(m.createEventObject)){D=m.createEventObject();D.bubbles=x;D.cancelable=u;D.view=G;D.detail=z;D.screenX=w;D.screenY=v;D.clientX=t;D.clientY=r;D.ctrlKey=s;D.altKey=q;D.metaKey=C;D.shiftKey=E;switch(y){case 0:D.button=1;break;case 1:D.button=4;break;case 2:break;default:D.button=0;}D.relatedTarget=B;A.fireEvent("on"+F,D);}else{a.error("simulateMouseEvent(): No event simulation framework present.");}}}function h(w,v,s,r,q,u){if(!w){a.error("simulateUIEvent(): Invalid target.");}if(d(v)){v=v.toLowerCase();if(!c[v]){a.error("simulateUIEvent(): Event type '"+v+"' not supported.");}}else{a.error("simulateUIEvent(): Event type must be a string.");}var t=null;if(!g(s)){s=(v in e);}if(!g(r)){r=(v=="submit");}if(!o(q)){q=window;}if(!n(u)){u=1;}if(f(m.createEvent)){t=m.createEvent("UIEvents");t.initUIEvent(v,s,r,q,u);w.dispatchEvent(t);}else{if(o(m.createEventObject)){t=m.createEventObject();t.bubbles=s;t.cancelable=r;t.view=q;t.detail=u;w.fireEvent("on"+v,t);}else{a.error("simulateUIEvent(): No event simulation framework present.");}}}a.Event.simulate=function(s,r,q){q=q||{};if(p[r]){b(s,r,q.bubbles,q.cancelable,q.view,q.detail,q.screenX,q.screenY,q.clientX,q.clientY,q.ctrlKey,q.altKey,q.shiftKey,q.metaKey,q.button,q.relatedTarget);}else{if(l[r]){i(s,r,q.bubbles,q.cancelable,q.view,q.ctrlKey,q.altKey,q.shiftKey,q.metaKey,q.keyCode,q.charCode);}else{if(c[r]){h(s,r,q.bubbles,q.cancelable,q.view,q.detail);}else{a.error("simulate(): Event '"+r+"' can't be simulated.");}}}};})();},"3.3.0",{requires:["event-base"]});
+ Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+ Code licensed under the BSD License:
+ http://developer.yahoo.com/yui/license.html
+ version: 3.3.0
+ build: 3167
+ */
+YUI.add('event-simulate',function(Y){(function(){var L=Y.Lang,array=Y.Array,isFunction=L.isFunction,isString=L.isString,isBoolean=L.isBoolean,isObject=L.isObject,isNumber=L.isNumber,doc=Y.config.doc,mouseEvents={click:1,dblclick:1,mouseover:1,mouseout:1,mousedown:1,mouseup:1,mousemove:1},keyEvents={keydown:1,keyup:1,keypress:1},uiEvents={blur:1,change:1,focus:1,resize:1,scroll:1,select:1},bubbleEvents={scroll:1,resize:1,reset:1,submit:1,change:1,select:1,error:1,abort:1};Y.mix(bubbleEvents,mouseEvents);Y.mix(bubbleEvents,keyEvents);function simulateKeyEvent(target,type,bubbles,cancelable,view,ctrlKey,altKey,shiftKey,metaKey,keyCode,charCode)
+{if(!target){Y.error("simulateKeyEvent(): Invalid target.");}
+if(isString(type)){type=type.toLowerCase();switch(type){case"textevent":type="keypress";break;case"keyup":case"keydown":case"keypress":break;default:Y.error("simulateKeyEvent(): Event type '"+type+"' not supported.");}}else{Y.error("simulateKeyEvent(): Event type must be a string.");}
+if(!isBoolean(bubbles)){bubbles=true;}
+if(!isBoolean(cancelable)){cancelable=true;}
+if(!isObject(view)){view=window;}
+if(!isBoolean(ctrlKey)){ctrlKey=false;}
+if(!isBoolean(altKey)){altKey=false;}
+if(!isBoolean(shiftKey)){shiftKey=false;}
+if(!isBoolean(metaKey)){metaKey=false;}
+if(!isNumber(keyCode)){keyCode=0;}
+if(!isNumber(charCode)){charCode=0;}
+var customEvent=null;if(isFunction(doc.createEvent)){try{customEvent=doc.createEvent("KeyEvents");customEvent.initKeyEvent(type,bubbles,cancelable,view,ctrlKey,altKey,shiftKey,metaKey,keyCode,charCode);}catch(ex){try{customEvent=doc.createEvent("Events");}catch(uierror){customEvent=doc.createEvent("UIEvents");}finally{customEvent.initEvent(type,bubbles,cancelable);customEvent.view=view;customEvent.altKey=altKey;customEvent.ctrlKey=ctrlKey;customEvent.shiftKey=shiftKey;customEvent.metaKey=metaKey;customEvent.keyCode=keyCode;customEvent.charCode=charCode;}}
+target.dispatchEvent(customEvent);}else if(isObject(doc.createEventObject)){customEvent=doc.createEventObject();customEvent.bubbles=bubbles;customEvent.cancelable=cancelable;customEvent.view=view;customEvent.ctrlKey=ctrlKey;customEvent.altKey=altKey;customEvent.shiftKey=shiftKey;customEvent.metaKey=metaKey;customEvent.keyCode=(charCode>0)?charCode:keyCode;target.fireEvent("on"+type,customEvent);}else{Y.error("simulateKeyEvent(): No event simulation framework present.");}}
+function simulateMouseEvent(target,type,bubbles,cancelable,view,detail,screenX,screenY,clientX,clientY,ctrlKey,altKey,shiftKey,metaKey,button,relatedTarget)
+{if(!target){Y.error("simulateMouseEvent(): Invalid target.");}
+if(isString(type)){type=type.toLowerCase();if(!mouseEvents[type]){Y.error("simulateMouseEvent(): Event type '"+type+"' not supported.");}}else{Y.error("simulateMouseEvent(): Event type must be a string.");}
+if(!isBoolean(bubbles)){bubbles=true;}
+if(!isBoolean(cancelable)){cancelable=(type!="mousemove");}
+if(!isObject(view)){view=window;}
+if(!isNumber(detail)){detail=1;}
+if(!isNumber(screenX)){screenX=0;}
+if(!isNumber(screenY)){screenY=0;}
+if(!isNumber(clientX)){clientX=0;}
+if(!isNumber(clientY)){clientY=0;}
+if(!isBoolean(ctrlKey)){ctrlKey=false;}
+if(!isBoolean(altKey)){altKey=false;}
+if(!isBoolean(shiftKey)){shiftKey=false;}
+if(!isBoolean(metaKey)){metaKey=false;}
+if(!isNumber(button)){button=0;}
+relatedTarget=relatedTarget||null;var customEvent=null;if(isFunction(doc.createEvent)){customEvent=doc.createEvent("MouseEvents");if(customEvent.initMouseEvent){customEvent.initMouseEvent(type,bubbles,cancelable,view,detail,screenX,screenY,clientX,clientY,ctrlKey,altKey,shiftKey,metaKey,button,relatedTarget);}else{customEvent=doc.createEvent("UIEvents");customEvent.initEvent(type,bubbles,cancelable);customEvent.view=view;customEvent.detail=detail;customEvent.screenX=screenX;customEvent.screenY=screenY;customEvent.clientX=clientX;customEvent.clientY=clientY;customEvent.ctrlKey=ctrlKey;customEvent.altKey=altKey;customEvent.metaKey=metaKey;customEvent.shiftKey=shiftKey;customEvent.button=button;customEvent.relatedTarget=relatedTarget;}
+if(relatedTarget&&!customEvent.relatedTarget){if(type=="mouseout"){customEvent.toElement=relatedTarget;}else if(type=="mouseover"){customEvent.fromElement=relatedTarget;}}
+target.dispatchEvent(customEvent);}else if(isObject(doc.createEventObject)){customEvent=doc.createEventObject();customEvent.bubbles=bubbles;customEvent.cancelable=cancelable;customEvent.view=view;customEvent.detail=detail;customEvent.screenX=screenX;customEvent.screenY=screenY;customEvent.clientX=clientX;customEvent.clientY=clientY;customEvent.ctrlKey=ctrlKey;customEvent.altKey=altKey;customEvent.metaKey=metaKey;customEvent.shiftKey=shiftKey;switch(button){case 0:customEvent.button=1;break;case 1:customEvent.button=4;break;case 2:break;default:customEvent.button=0;}
+customEvent.relatedTarget=relatedTarget;target.fireEvent("on"+type,customEvent);}else{Y.error("simulateMouseEvent(): No event simulation framework present.");}}
+function simulateUIEvent(target,type,bubbles,cancelable,view,detail)
+{if(!target){Y.error("simulateUIEvent(): Invalid target.");}
+if(isString(type)){type=type.toLowerCase();if(!uiEvents[type]){Y.error("simulateUIEvent(): Event type '"+type+"' not supported.");}}else{Y.error("simulateUIEvent(): Event type must be a string.");}
+var customEvent=null;if(!isBoolean(bubbles)){bubbles=(type in bubbleEvents);}
+if(!isBoolean(cancelable)){cancelable=(type=="submit");}
+if(!isObject(view)){view=window;}
+if(!isNumber(detail)){detail=1;}
+if(isFunction(doc.createEvent)){customEvent=doc.createEvent("UIEvents");customEvent.initUIEvent(type,bubbles,cancelable,view,detail);target.dispatchEvent(customEvent);}else if(isObject(doc.createEventObject)){customEvent=doc.createEventObject();customEvent.bubbles=bubbles;customEvent.cancelable=cancelable;customEvent.view=view;customEvent.detail=detail;target.fireEvent("on"+type,customEvent);}else{Y.error("simulateUIEvent(): No event simulation framework present.");}}
+Y.Event.simulate=function(target,type,options){options=options||{};if(mouseEvents[type]){simulateMouseEvent(target,type,options.bubbles,options.cancelable,options.view,options.detail,options.screenX,options.screenY,options.clientX,options.clientY,options.ctrlKey,options.altKey,options.shiftKey,options.metaKey,options.button,options.relatedTarget);}else if(keyEvents[type]){simulateKeyEvent(target,type,options.bubbles,options.cancelable,options.view,options.ctrlKey,options.altKey,options.shiftKey,options.metaKey,options.keyCode,options.charCode);}else if(uiEvents[type]){simulateUIEvent(target,type,options.bubbles,options.cancelable,options.view,options.detail);}else{Y.error("simulate(): Event '"+type+"' can't be simulated.");}};})();},'3.3.0',{requires:['event-base']});

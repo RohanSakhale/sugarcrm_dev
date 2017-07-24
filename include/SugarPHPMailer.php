@@ -410,12 +410,13 @@ eoq;
         }
         return $connection;
     }
+
     // fn
 
     /*
      * overloads PHPMailer::PreSend() to allow for empty messages to go out.
      */
-    protected function PreSend()
+    public function PreSend()
     {
         //check to see if message body is empty
         if (empty($this->Body)) {

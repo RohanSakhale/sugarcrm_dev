@@ -1,14 +1,8 @@
 /*
- Copyright (c) 2010, Yahoo! Inc. All rights reserved.
- Code licensed under the BSD License:
- http://developer.yahoo.com/yui/license.html
- version: 3.3.0
- build: 3167
- */
-YUI.add('datatype-xml-parse',function(Y){var LANG=Y.Lang;Y.mix(Y.namespace("DataType.XML"),{parse:function(data){var xmlDoc=null;if(LANG.isString(data)){try{if(!LANG.isUndefined(ActiveXObject)){xmlDoc=new ActiveXObject("Microsoft.XMLDOM");xmlDoc.async=false;xmlDoc.loadXML(data);}}
-catch(ee){try{if(!LANG.isUndefined(DOMParser)){xmlDoc=new DOMParser().parseFromString(data,"text/xml");}}
-catch(e){}}}
-if((LANG.isNull(xmlDoc))||(LANG.isNull(xmlDoc.documentElement))||(xmlDoc.documentElement.nodeName==="parsererror")){}
-return xmlDoc;}});Y.namespace("Parsers").xml=Y.DataType.XML.parse;},'3.3.0',{requires:['yui-base']});YUI.add('datatype-xml-format',function(Y){var LANG=Y.Lang;Y.mix(Y.namespace("DataType.XML"),{format:function(data){try{if(!LANG.isUndefined(XMLSerializer)){return(new XMLSerializer()).serializeToString(data);}}
-catch(e){if(data&&data.xml){return data.xml;}
-else{return(LANG.isValue(data)&&data.toString)?data.toString():"";}}}});},'3.3.0',{requires:['yui-base']});YUI.add('datatype-xml',function(Y){},'3.3.0',{use:['datatype-xml-parse','datatype-xml-format']});
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.3.0
+build: 3167
+*/
+YUI.add("datatype-xml-parse",function(b){var a=b.Lang;b.mix(b.namespace("DataType.XML"),{parse:function(f){var d=null;if(a.isString(f)){try{if(!a.isUndefined(ActiveXObject)){d=new ActiveXObject("Microsoft.XMLDOM");d.async=false;d.loadXML(f);}}catch(c){try{if(!a.isUndefined(DOMParser)){d=new DOMParser().parseFromString(f,"text/xml");}}catch(g){}}}if((a.isNull(d))||(a.isNull(d.documentElement))||(d.documentElement.nodeName==="parsererror")){}return d;}});b.namespace("Parsers").xml=b.DataType.XML.parse;},"3.3.0",{requires:["yui-base"]});YUI.add("datatype-xml-format",function(b){var a=b.Lang;b.mix(b.namespace("DataType.XML"),{format:function(c){try{if(!a.isUndefined(XMLSerializer)){return(new XMLSerializer()).serializeToString(c);}}catch(d){if(c&&c.xml){return c.xml;}else{return(a.isValue(c)&&c.toString)?c.toString():"";}}}});},"3.3.0",{requires:["yui-base"]});YUI.add("datatype-xml",function(a){},"3.3.0",{use:["datatype-xml-parse","datatype-xml-format"]});

@@ -102,7 +102,7 @@ class DeployedSubpanelImplementation extends AbstractMetaDataImplementation impl
                 {
                     // load in the subpanelDefOverride from the history file
                     $GLOBALS [ 'log' ]->debug ( get_class ( $this ) . ": loading from history" ) ;
-                    require $this->historyPathname ;
+                    require validate_path($this->historyPathname);
                     $this->_viewdefs = $layout_defs;
                 } else
                 {

@@ -44,18 +44,68 @@ require_once('include/utils/sugar_file_utils.php');
  * @param string $path
  * @return string
  */
-function clean_path( $path )
+function clean_path($path)
 {
     // clean directory/file path with a functional equivalent
     $appendpath = '';
-    if ( is_windows() && strlen($path) >= 2 && $path[0].$path[1] == "\\\\" ) {
-        $path = substr($path,2);
+    if (is_windows() && strlen($path) >= 2 && $path[0].$path[1] == "\\\\") {
+        $path = substr($path, 2);
         $appendpath = "\\\\";
     }
-    $path = str_replace( "\\", "/", $path );
-    $path = str_replace( "//", "/", $path );
-    $path = str_replace( "/./", "/", $path );
-    return( $appendpath.$path );
+    $path = str_replace("\\", "/", $path);
+    $path = str_replace("//", "/", $path);
+    $path = str_replace("/./", "/", $path);
+    return($appendpath.$path);
+}
+
+/**
+ * Sanitize file path
+ * @param string $path
+ * @param bool $partial If TRUE will remove leading slash if FALSE will check realpath
+ * @return string
+ */
+function validate_path($path, $partial = false)
+{
+    $original_path = $path;
+    $appendpath = '';
+    if (is_windows() && strlen($path) >= 2 && $path[0].$path[1] == "\\\\") {
+        $path = substr($path, 2);
+        $appendpath = "\\\\";
+    }
+
+    $characters = array(
+        chr(0),
+        './',
+        '..',
+        '"',
+        "'",
+        '`',
+        '://',
+    );
+
+    if (!is_windows()) {
+        $characters[] = ':';
+    }
+
+    $path = str_replace("\\", "/", $path);
+    $path = str_replace($characters, '', $path);
+    $path = preg_replace('@[//]+@', '/', $path);
+
+    if ($partial && strpos($path, '/') === 0) {
+        $path = substr($path, 1);
+    }
+
+    $path = $appendpath.$path;
+
+    if (!empty($GLOBALS['log'])) {
+        if (!$partial && realpath($path) === false) {
+            $GLOBALS['log']->debug('Path [' . $path . ']: file not found');
+        }
+
+        $GLOBALS['log']->debug('Path [' . $original_path . '] sanitized to [' . $path . ']');
+    }
+
+    return $path;
 }
 
 function create_cache_directory($file)

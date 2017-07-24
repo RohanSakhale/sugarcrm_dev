@@ -127,9 +127,9 @@ class ExternalAPIFactory
 
         $optionList = array('supportedModules','useAuth','requireAuth','supportMeetingPassword','docSearch', 'authMethod', 'oauthFixed','needsUrl','canInvite','sendsInvites','sharingOptions','connector', 'oauthParams','restrictUploadsByExtension');
         foreach ( $apiFullList as $apiName => $apiOpts ) {
-            require_once($apiOpts['file']);
+            require_once validate_path($apiOpts['file']);
             if ( !empty($apiOpts['file_cstm']) ) {
-                require_once($apiOpts['file_cstm']);
+                require_once validate_path($apiOpts['file_cstm']);
             }
             $className = $apiOpts['className'];
             $apiClass = new $className();
@@ -202,9 +202,9 @@ class ExternalAPIFactory
         }
 
         $myApi = $apiList[$apiName];
-        require_once($myApi['file']);
+        require_once validate_path($myApi['file']);
         if ( !empty($myApi['file_cstm']) ) {
-            require_once($myApi['file_cstm']);
+            require_once validate_path($myApi['file_cstm']);
         }
 
         $apiClassName = $myApi['className'];

@@ -138,7 +138,7 @@ class ViewModulefields extends SugarView
 
             if(file_exists($this->mbModule->path. '/language/'.$current_language.'.lang.php'))
             {
-                include($this->mbModule->path .'/language/'.$current_language.'.lang.php');
+                include validate_path($this->mbModule->path .'/language/'.$current_language.'.lang.php');
                 $this->mbModule->setModStrings($current_language,$mod_strings);
             }elseif(file_exists($this->mbModule->path. '/language/en_us.lang.php')){
                 include($this->mbModule->path .'/language/en_us.lang.php');
